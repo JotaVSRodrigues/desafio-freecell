@@ -366,12 +366,12 @@
     // - auxiliares
     // =====================================================
     function validarMovimentoAuxiliar(indiceDestino) {
-      console.log("indice destino validar movimento auxiliar", indiceDestino)
-      if (indiceDestino != 0 || indiceDestino != 1) {
+      // console.log("indice destino validar movimento auxiliar", indiceDestino)
+      if (indiceDestino != 0 && indiceDestino != 1) {
         alert("Indice destino é diferente de 0 ou 1 para a auxiliar")
         return false
       }
-      if (auxiliares[indiceDestino] != null) {
+      if (auxiliares[indiceDestino].length !== 0) {
         return false
       }
       
@@ -526,13 +526,14 @@
         return false
       }
 
-      let tipo = numero <= 8 ? 'coluna' : 
-        numero <= 10 ? 'auxiliar' : 'pilha final'
+      let tipo = numero < 8 ? 'coluna' : 
+        numero <= 9 ? 'auxiliar' : 'pilha final'
       let indice = 0
+
         console.log("NUMERO:", numero)
-        if (numero <= 8) indice = numero
-        if (numero === 9) indice = 0
-        if (numero === 10) indice = 1
+        if (numero < 8) indice = numero
+        if (numero === 8) indice = 0
+        if (numero === 9) indice = 1
 
       if (tipo === 'coluna') moverParaColuna(indice)
       if (tipo === 'auxiliar') moverParaAuxiliar(indice)
@@ -652,11 +653,12 @@
     // - auxiliares
     // =====================================================
     function moverParaAuxiliar(indiceDestino) {
+      console.log(indiceDestino)
       let auxiliarDestino = auxiliares[indiceDestino]
 
       if (validarMovimentoAuxiliar(indiceDestino)) {
 
-        auxiliarDestino.push(cartaSelecionada)
+        auxiliarDestino.push(cartaSelecionada.carta)
         removerCartaSelecionada()
         finalizarMovimento()
       } else {
