@@ -243,7 +243,7 @@
         cartas[random] = temp
       }
 
-      console.log(cartas)
+      // console.log(cartas)
     }
 
     // =====================================================
@@ -263,7 +263,7 @@
     // =====================================================
     function distribuirCartas() {
 
-      console.log("Colunas.length:", colunas.length)
+      // console.log("Colunas.length:", colunas.length)
 
       while (cartas.length > 0) {
         for (let i = 0; i < colunas.length; i++) {
@@ -298,9 +298,16 @@
     // =====================================================
     function validarMovimentoColuna(cartaOrigem, cartaDestino) {
     
-      if (cartaOrigem.cor != cartaDestino.cor &&
-      ordem.indexOf(cartaOrigem.valor) < ordem.indexOf(cartaDestino.valor)
-      ) { return true }
+      // if (cartaOrigem.cor != cartaDestino.cor &&
+      // ordem.indexOf(cartaOrigem.valor) < ordem.indexOf(cartaDestino.valor)
+      // ) { return true }
+
+
+      if (ordem.indexOf(cartaOrigem.valor) + 1 === ordem.indexOf(cartaDestino.valor)
+        && cartaOrigem.cor != cartaDestino.cor
+      ) {
+        return true
+      }
 
       return false
     }
@@ -359,7 +366,16 @@
     // - auxiliares
     // =====================================================
     function validarMovimentoAuxiliar(indiceDestino) {
-      return auxiliares[indiceDestino].length === 0 ? true : false 
+      console.log("indice destino validar movimento auxiliar", indiceDestino)
+      if (indiceDestino != 0 || indiceDestino != 1) {
+        alert("Indice destino é diferente de 0 ou 1 para a auxiliar")
+        return false
+      }
+      if (auxiliares[indiceDestino] != null) {
+        return false
+      }
+      
+      return true
     }
 
     // =====================================================
@@ -408,8 +424,8 @@
       }
 
       selecionarOrigem(iptOrigem)
-      console.log(cartaSelecionada)
-      if (cartaSelecionada == null) { 
+      // console.log(cartaSelecionada)
+      if (cartaSelecionada.carta == null) { 
         alert("A carta selecionada continua nula") 
         return false
       }
@@ -505,7 +521,7 @@
     // - moverParaFinal()
     // =====================================================
     function moverDestino(numero) {
-      if (numero < 1 || numero > 12) {
+      if (numero < 0 || numero > 12) {
         alert("Número de Mover Destino inválido - precisa ser entre 1 e 12")
         return false
       }
@@ -513,13 +529,13 @@
       let tipo = numero <= 8 ? 'coluna' : 
         numero <= 10 ? 'auxiliar' : 'pilha final'
       let indice = 0
-
+        console.log("NUMERO:", numero)
         if (numero <= 8) indice = numero
         if (numero === 9) indice = 0
         if (numero === 10) indice = 1
 
       if (tipo === 'coluna') moverParaColuna(indice)
-      if (tipo === 'auxiliar') moverParaAuxiliar()
+      if (tipo === 'auxiliar') moverParaAuxiliar(indice)
       if (tipo === 'pilha final') moverParaFinal()
     }
 
@@ -594,11 +610,10 @@
       let colunaDestino = colunas[indiceDestino]
 
       if (colunaDestino != null) {
-        let cartaTopo = colunaDestino[0]
+        let cartaTopo = colunaDestino[colunaDestino.length - 1]
 
-        if (validarMovimentoColuna(cartaSelecionada, cartaTopo)) {
-          colunaDestino.push(cartaSelecionada)
-          // console.log(colunaDestino)
+        if (validarMovimentoColuna(cartaSelecionada.carta, cartaTopo)) {
+          colunaDestino.push(cartaSelecionada.carta)
           removerCartaSelecionada()
           finalizarMovimento()
 
@@ -607,17 +622,6 @@
           return false
         }        
       }
-      // if (colunas[indiceDestino].length === 0) {
-      //   alert("A coluna está vazia - em moverParaColuna")
-      // }
-
-      // if (validarMovimentoColuna(cartaSelecionada, colunas[indiceDestino[0]])) {          
-      //   removerCartaSelecionada()
-      //   finalizarMovimento()
-      // } else {
-      //   alert("moverParaColuna - O movimento é inválido")
-      // }
-      
     }
 
     // =====================================================
@@ -648,7 +652,16 @@
     // - auxiliares
     // =====================================================
     function moverParaAuxiliar(indiceDestino) {
+      let auxiliarDestino = auxiliares[indiceDestino]
 
+      if (validarMovimentoAuxiliar(indiceDestino)) {
+
+        auxiliarDestino.push(cartaSelecionada)
+        removerCartaSelecionada()
+        finalizarMovimento()
+      } else {
+        alert("Movimento para auxiliar invalido")
+      }
     }
 
     // =====================================================
