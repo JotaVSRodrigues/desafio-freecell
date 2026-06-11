@@ -333,15 +333,20 @@
     // - pilhaFinal -> pilha final de destino
     // =====================================================
     function validarMovimentoFinal(cartaOrigem, pilhaFinal) {
-
       let valido = true 
 
-      if (pilhaFinal[0].length === 0 && cartaOrigem.valor === "A") {
+      console.log("PILHA FINAL:, ", pilhaFinal)
+      
+      if (finais[pilhaFinal].length === 0 && cartaOrigem.valor === "A") {
         return true 
       }
-      if (pilhaFinal[0].naipe === "A" && 
-        cartaOrigem.naipe === pilhaFinal[0].naipe &&
-        ordem.indexOf(cartaOrigem.valor) < ordem.indexOf(pilhaFinal[0].valor)) {
+
+      let cartaFinal = finais[pilhaFinal][finais[pilhaFinal].length - 1]
+      console.log(cartaFinal)
+
+      if (cartaOrigem.naipe === cartaFinal.naipe &&
+        ordem.indexOf(cartaFinal.valor) - 1 === ordem.indexOf(cartaSelecionada.valor)
+        && cartaFinal.cor === cartaSelecionada.cor) {
           return true
       }
 
@@ -532,12 +537,12 @@
 
         console.log("NUMERO:", numero)
         if (numero < 8) indice = numero
-        if (numero === 8) indice = 0
-        if (numero === 9) indice = 1
+        if (numero === 8 || numero === 10) indice = 0
+        if (numero === 9 || numero === 11) indice = 1
 
       if (tipo === 'coluna') moverParaColuna(indice)
       if (tipo === 'auxiliar') moverParaAuxiliar(indice)
-      if (tipo === 'pilha final') moverParaFinal()
+      if (tipo === 'pilha final') moverParaFinal(indice)
     }
 
     // =====================================================
@@ -699,7 +704,19 @@
     // - cartaSelecionada
     // =====================================================
     function moverParaFinal(indiceDestino) {
+      
+      // console.log("finais indiceDestino", finais[indiceDestino])
 
+    
+      if (validarMovimentoFinal(cartaSelecionada.carta, indiceDestino)) {
+        
+
+        finais[indiceDestino].push(cartaSelecionada.carta)
+        removerCartaSelecionada()
+        finalizarMovimento()
+      } else {
+        alert("Movimento final invalido")
+      }
     }
 
     // =====================================================
